@@ -3,6 +3,7 @@ package com.newcoder.community.service;
 import com.newcoder.community.dao.UserMapper;
 import com.newcoder.community.model.User;
 
+import com.newcoder.community.utils.CommunityConstant;
 import com.newcoder.community.utils.CommunityUtils;
 import com.newcoder.community.utils.MailClient;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,7 @@ import org.thymeleaf.context.Context;
 import javax.mail.MessagingException;
 
 @Service
-public class UserService {
+public class UserService implements CommunityConstant {
     @Autowired
     private UserMapper userMapper;
 
@@ -32,7 +33,7 @@ public class UserService {
     @Value("${community.path.domain}")
     private String domain;
 
-    @Value("{server.servlet.context-path}")
+    @Value("${server.servlet.context-path}")
     private String contextPath;
 
 
@@ -94,6 +95,7 @@ public class UserService {
         // http://localhost:8080/community/activation/101/code
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
+        //模板引擎渲染
         String content = templateEngine.process("/mail/activation", context);
         try {
             mailClient.sendMail(user.getEmail(), "激活账号", content);
@@ -102,6 +104,18 @@ public class UserService {
         }
 
         return map;
+    }
+
+    public int activation(int userId,String code){
+        User user=userMapper.selectById(userId);
+        if(user.getStatus()==1){
+            return ACTIVATION_REPEAT;
+        }else  if (user.getActivationCode().equals(code)){
+            userMapper.updateStatus(userId,1);
+            return ACTIVATION_SUCCESS;
+        }else{
+            return ACTIVATION_FAILURE;
+        }
     }
 
 }

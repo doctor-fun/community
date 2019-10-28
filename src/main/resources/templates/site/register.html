@@ -64,12 +64,27 @@
 		<div class="main">
 			<div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
 				<h3 class="text-center text-info border-bottom pb-3">注&nbsp;&nbsp;册</h3>
-				<form class="mt-5">
+<!--			表单通过post方式，向/register提交内容	-->
+				<form class="mt-5" method="post" th:action="@{/register}">
 					<div class="form-group row">
 						<label for="username" class="col-sm-2 col-form-label text-right">账号:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="username" placeholder="请输入您的账号!" required>
-							<div class="invalid-feedback">
+<!--							这里必须写上name="username",springmvc的/register controller接口才会将相关收到的属性绑定到入口参数User里面-->
+<!--							同时刚开始注册的时候，控件里面并没有内容，value取值就应当为空，当注册失败返回注册页的时候，这个控件里面应该有用户名(不用重复填写)
+，这就是th:value="${user!=null?user.username:''}"存在的意义-->
+
+<!--	th:class表示如果usernameMsg!=null那么就使用
+		div class="invalid-feedback控件"
+		等于Null就说明正常，就不显示这个控件
+		|... ...| 前面表示固定显示模块，后面表示带上其他模块
+	-->
+							<input type="text"
+								   th:class="|form-control ${usernameMsg!=null?'is-invalid':''}"
+								   th:value="${user!=null?user.username:''}"
+								   id="username" name="username" placeholder="请输入您的账号!" required>
+							<!--							这里就出现了th:text,用户第二次返回时页面刷出实际的错误信息。注th:text的内容会替代“该邮箱已注册”这一条信息，如果第一次调用，usernameMsg内容是空的，不会显示
+也不会出现空指针异常，因为没有下级调用-->
+							<div class="invalid-feedback" th:text="${usernameMsg}">
 								该账号已存在!
 							</div>
 						</div>
@@ -77,7 +92,10 @@
 					<div class="form-group row mt-4">
 						<label for="password" class="col-sm-2 col-form-label text-right">密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="password" placeholder="请输入您的密码!" required>
+							<input type="password"
+								   th:class="|form-control ${passwordMsg!=null?'is-invalid':''}|"
+								   th:value="${user!=null?user.password:''}"
+								   id="password" name="password" placeholder="请输入您的密码!" required>
 							<div class="invalid-feedback">
 								密码长度不能小于8位!
 							</div>							
@@ -86,17 +104,24 @@
 					<div class="form-group row mt-4">
 						<label for="confirm-password" class="col-sm-2 col-form-label text-right">确认密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="confirm-password" placeholder="请再次输入密码!" required>
-							<div class="invalid-feedback">
+							<input type="password" class="form-control"
+								   th:value="${user!=null?user.password:''}"
+								   id="confirm-password" placeholder="请再次输入密码!" required>
+							<div class="invalid-feedback" th:text="${passwordMsg}">
 								两次输入的密码不一致!
 							</div>
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="email" class="col-sm-2 col-form-label text-right">邮箱:</label>
+						<label for="email" class="col-sm-2 col-form-label text-right" >邮箱:</label>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="email" placeholder="请输入您的邮箱!" required>
-							<div class="invalid-feedback">
+							<input type="email"
+								   class="|form-control ${emailMsg!=null?'is-invalid':''}"
+								   th:value="${user!=null?user.email:''}"
+								   id="email" placeholder="请输入您的邮箱!" name="email" required>
+<!--							这里就出现了th:text,用户第二次返回时页面刷出实际的错误信息。注th:text的内容会替代“该邮箱已注册”这一条信息，如果第一次调用，usernameMsg内容是空的，不会显示
+也不会出现空指针异常，因为没有下级调用-->
+							<div class="invalid-feedback" th:text="${emailMsg}">
 								该邮箱已注册!
 							</div>
 						</div>
