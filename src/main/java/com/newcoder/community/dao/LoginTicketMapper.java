@@ -9,7 +9,7 @@ public interface LoginTicketMapper {
             "insert into login_ticket(user_id,ticket,status,expired) ",
             "values(#{userId},#{ticket},#{status},#{expired})"
     })
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "id")//id自动生成，将结果注入到table的id属性
     int insertLoginTicket(LoginTicket loginTicket);
 
     @Select({
