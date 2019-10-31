@@ -19,7 +19,7 @@ public interface LoginTicketMapper {
     LoginTicket selectByTicket(String ticket);
 
     @Update({
-            "<script>",
+            "<script>",//套上<script>才能使用if
             "update login_ticket set status=#{status} where ticket=#{ticket} ",
             "<if test=\"ticket!=null\"> ",
             "and 1=1 ",

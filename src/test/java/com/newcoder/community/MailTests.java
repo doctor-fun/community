@@ -1,5 +1,7 @@
 package com.newcoder.community;
 
+import com.newcoder.community.dao.LoginTicketMapper;
+import com.newcoder.community.model.LoginTicket;
 import com.newcoder.community.utils.MailClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +11,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
 import javax.mail.MessagingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @RunWith(SpringRunner.class)
@@ -24,7 +30,8 @@ public class MailTests {
     //主动调用模板引擎
     @Autowired
     private TemplateEngine templateEngine;
-
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
     @Test
     public void testTestMail(){
         try {
@@ -47,5 +54,28 @@ public class MailTests {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void testLogin(){
+//
+//        LoginTicket loginTicket=new LoginTicket();
+//        loginTicket.setUserId(5);
+//        loginTicket.setTicket("babazaici");
+//        loginTicket.setStatus(0);
+//
+////        try {
+////            SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+////            Date date1=dateFormat.parse("2019-12-31");
+////
+////        } catch (ParseException e) {
+////            e.printStackTrace();
+////        }
+//
+//        loginTicket.setExpired(new Date(System.currentTimeMillis()+1000*60*10));
+//        loginTicketMapper.insertLoginTicket(loginTicket);
+        LoginTicket loginTicket=loginTicketMapper.selectByTicket("babazaici");
+        System.out.println(loginTicket);
+
+
     }
 }
