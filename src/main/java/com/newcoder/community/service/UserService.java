@@ -135,8 +135,9 @@ public class UserService implements CommunityConstant {
         User user=userMapper.selectByName(username);
         if(user==null){
             map.put("usernameMsg","该账号不存在");
+            return map;
         }
-        if(user.getStatus()==0){
+        if(user.getStatus()==0){//如果没有这个用户，name会报NullPointerException的错误
             map.put("usernameMsg","该账号未激活");
             return  map;
         }
@@ -152,8 +153,16 @@ public class UserService implements CommunityConstant {
         loginTicket.setExpired(new Date(System.currentTimeMillis()+expiredSeconds*1000));
         loginTicketMapper.insertLoginTicket(loginTicket);
         map.put("ticket",loginTicket.getTicket());//这里有点像cookies
+        map.put("user",user);
         return map;
 
     }
+    public void logout(String ticket){
+        loginTicketMapper.updateStatus(ticket,1);//
+    }
+    public LoginTicket findLoginTicket(String ticket){
+        return loginTicketMapper.selectByTicket(ticket);
+    }
+
 
 }
