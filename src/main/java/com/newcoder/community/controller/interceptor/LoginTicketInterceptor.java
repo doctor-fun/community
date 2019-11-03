@@ -26,7 +26,8 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     private HostHolder hostHolder;//为本线程生成threadlocal变量,用于保存登录用户的ticket
     @Override//获得了
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String ticket = CookieUtil.getValue(request,"ticket");
+      //注册以后会有ticket,在任何请求来之前看一下cookie里面有没有ticket，有的话就要做一些操作，页面上回根据
+       String ticket = CookieUtil.getValue(request,"ticket");
         if(ticket!=null){
             LoginTicket loginTicket=userService.findLoginTicket(ticket);
             //检查凭证是否有效
@@ -36,7 +37,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
                 hostHolder.setUser(user);
             }
         }
-        return false;
+        return true;
     }
 
     @Override

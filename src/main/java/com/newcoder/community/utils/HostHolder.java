@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HostHolder {
+    //生成一个Hostholder,注意user是拦截器通过ticket找到user传入的
     private ThreadLocal<User> users=new ThreadLocal<User>();
     public void setUser(User user){
         users.set(user);//将user存到相应线程所对应的map中；
