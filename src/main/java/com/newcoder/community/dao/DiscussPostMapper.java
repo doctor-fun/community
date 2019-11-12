@@ -19,4 +19,6 @@ public interface DiscussPostMapper {
     //查询特定用户有多少行帖子，用于计算一共有多少页，当为0时查询的是所有用户的值
     int selectDiscussPostRows(@Param("userId")int userId);
 
+    int insertDiscussPost(DiscussPost discussPost);
+
 }

@@ -1,5 +1,6 @@
 package com.newcoder.community.utils;
 
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.slf4j.Logger;
@@ -15,6 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+
+//读入敏感词文件，将敏感词内容读进map，然后将待检查文本读入，敏感词（最后一个字符有敏感词结束标志），然后用2个指针不断得着文本内的敏感词，
+//一个是Position指针，一个是begin，不是替换，而是从新生成文本
 public class SensitiveFilter {
     private static final Logger logger= LoggerFactory.getLogger(SensitiveFilter.class);
     //前缀树，内部类
@@ -49,6 +53,7 @@ public class SensitiveFilter {
     private TrieNode rootNode=new TrieNode();//生成一个map，这个map不断的加子节点，这样的话就可以用map保存整棵树
 
     @PostConstruct
+    //在构造函数之后执行
     public void init(){
         //从classPath下加载路径
     try (
@@ -92,7 +97,7 @@ public class SensitiveFilter {
     }
 
     /**
-     *过滤敏感词,供外部调用
+     *过滤敏感词,供外部调用，此时敏感词树应该是满的
      * @param text  待过滤的文本
      * @return  过滤后的文本
      */
@@ -103,12 +108,49 @@ public class SensitiveFilter {
         TrieNode tempNode=rootNode;
         int begin=0;//前后指针
         int position=0;
+        //stringbuilder用于存储结果串
         StringBuilder sb=new StringBuilder();
-        while(position<text.length()){
-            char c =text.charAt(position);
-            if(tempNode=rootNode){
-                sb.append(c);
+        while(position<text.length()) {
+            char c = text.charAt(position);
+            if (isSymbol(c)) {
+                //若指针1处于根节点，将此符号计入结果，让指针2向下走一步
+                //说明疑似敏感词
+                if (tempNode == rootNode) {
+                    sb.append(c);
+                    begin++;
+                }
+                //无论符号在开头或者中间，指针3都向下走一步(指针3是计数指针)
+                position++;
+                continue;
+            }
+            //检查下级节点
+            //这里看去是getSubNode(c)，其实是从整颗树找
+            tempNode = tempNode.getSubNode(c);
+            if (tempNode == null) {
+                //以begin开头的字符串不是敏感词
+                sb.append(text.charAt(begin));
+                //进入下一个位置
+                position = ++begin;
+                tempNode = rootNode;
+            }else if(tempNode.isKeywordEnd()){
+                //发现了敏感词，将begin~position字符串替换掉
+                sb.append(REPLACEMENT);
+                //进入下一个位置
+                begin=++position;
+            }else{
+                //检查下一个字符
+                position++;
             }
         }
+        //将最后一批字符计入结果
+        sb.append(text.substring(begin));
+        return sb.toString();
+    }
+    //跳过符号,符号可能出现在敏感词之前，之后，之中
+    private boolean isSymbol(Character c){
+
+        //(c<0x2E80||c>0x9FFF)
+        //东亚文字范围，的
+        return !CharUtils.isAsciiAlphanumeric(c) && (c<0x2E80||c>0x9FFF);
     }
 }

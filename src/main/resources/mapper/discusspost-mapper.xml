@@ -7,6 +7,9 @@
 -- 要查询的字段有哪些
         id, user_id, title, content, type, status, create_time, comment_count, score
     </sql>
+    <sql id="insertFields">
+        user_id, title, content, type, status, create_time, comment_count, score
+    </sql>
 <!--    指定对应关系-->
     <select id="selectDiscussPosts" resultType="DiscussPost">
 -- 引用要查询哪些字段，复用了上面那段
@@ -31,5 +34,12 @@
             and user_id = #{userId}
         </if>
     </select>
+<!--    指定绑定的Mapper的方法名 以及model-->
+    <insert id="insertDiscussPost" parameterMap="DiscussPost">
+-- refid是引用上面的sql组件
+        insert  into discuss_post(<include refid="insertFields"></include>)
+--         这些值是mapper里面的的参数DiscussPost类的赋值属性
+        values(#{userId},#{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})
+    </insert>
 
 </mapper>

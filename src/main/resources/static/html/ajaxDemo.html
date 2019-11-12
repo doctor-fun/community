@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax</title>
+</head>
+<body>
+<p>
+    <input type="button" value="发送" onclick="send()">
+</p>
+<!--引入jquery-->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    function send() {
+        $.post(
+            //访问路径
+            "/community/alpha/ajax",
+            {
+                "name":"张三","age":23
+            },
+            //访问成功后数据存进data，data是个string
+            function (data){
+                console.log(typeof(data));
+                console.log(data);
+                //字符串转成js对象,才能够通过"."操作符访问它的属性
+                $.parseJSON(data);
+                 console.log(typeof(data));
+                 console.log(data.code);
+                 console.log(data.msg);
+            }
+        )
+    }
+</script>
+</body>
+</html>
