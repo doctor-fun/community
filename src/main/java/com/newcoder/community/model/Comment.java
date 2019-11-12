@@ -5,15 +5,14 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class DiscussPost {
+public class Comment {
+
     private int id;
     private int userId;
-    private String title;
+    private int entityId;
+    private int targetId;
     private String content;
-    private int type;
     private int status;
     private Date createTime;
-    private int commentCount;
-    private double score;
 
 }

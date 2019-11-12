@@ -21,4 +21,10 @@ public interface DiscussPostMapper {
 
     int insertDiscussPost(DiscussPost discussPost);
 
+    /**
+     * 根据id查询帖子的详情
+     * @param id
+     * @return
+     */
+    DiscussPost selectDiscussPostById(int id);
 }

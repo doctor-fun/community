@@ -35,11 +35,17 @@
         </if>
     </select>
 <!--    指定绑定的Mapper的方法名 以及model-->
-    <insert id="insertDiscussPost" parameterMap="DiscussPost">
+    <insert id="insertDiscussPost" parameterType="DiscussPost">
 -- refid是引用上面的sql组件
         insert  into discuss_post(<include refid="insertFields"></include>)
 --         这些值是mapper里面的的参数DiscussPost类的赋值属性
         values(#{userId},#{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})
     </insert>
+<!--    id是map里面定义的方法名-->
+    <select id="selectDiscussPostById" resultType="DiscussPost">
+        select <include refid="selectFields"></include>
+        from discuss_post
+        where id=#{id}
+    </select>
 
 </mapper>
