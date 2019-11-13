@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 <!--	让thymleaf在路径中查找样式-->
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<title>学习减分-首页</title>
+	<title>钱江源社区-首页</title>
 </head>
 <body>	
 	<div class="nk-container">
@@ -26,6 +26,7 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item ml-3 btn-group-vertical">
+<!--								@{标识链接到首页}-->
 								<a class="nav-link" th:href="@{index}">首页</a>
 							</li>
 							<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser!=null}">
@@ -140,7 +141,7 @@
 								<ul class="d-inline float-right">
 									<li class="d-inline ml-2">赞 11</li>
 									<li class="d-inline ml-2">|</li>
-									<li class="d-inline ml-2">回帖 7</li>
+									<li class="d-inline ml-2">回帖<span th:text="${map.post.commentCount}">7 </span> </li>
 								</ul>
 							</div>
 						</div>						

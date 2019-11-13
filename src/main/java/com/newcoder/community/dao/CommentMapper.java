@@ -14,7 +14,7 @@ public interface CommentMapper {
      * @param
      * @param entityId
      * @param offset 每页起始行数（从0行开始数起）
-     * @param limit 每页显示的行数的限制
+     * @param limit 每页显示的行数的限制(到第几行结束)
      * @return
      */
     List<Comment> selectCommentsByEntity(int entityType,int entityId,int offset,int limit);
