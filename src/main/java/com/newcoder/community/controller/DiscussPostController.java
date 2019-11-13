@@ -98,7 +98,7 @@ private CommentService commentService;
       commentVo.put("replys",replyVoList);
       //某个评论的回复数量
         int replyCount=commentService.findCommentCount(ENTITY_TYPE_COMMENT,comment.getId());
-        commentVo.put("replayCount",replyCount);
+        commentVo.put("replyCount",replyCount);
         commentVoList.add(commentVo);
 
 
